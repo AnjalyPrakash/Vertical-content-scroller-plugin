@@ -1,28 +1,22 @@
-.custom-content-scroller, .custom-content-scroller * {
-    box-sizing: border-box;  
-}
-
-.custom-content-scroller {
+ .custom-content-scroller {
     position: relative;
-    overflow: hidden; /* Ensures content outside this container is not visible */
-    height: 200px; /* Fixed height for the scrolling area */
-    width: 100%; /* Takes full width of the parent element */
+    overflow: hidden;
+    height: 200px;
+    width: 100%;
 }
 
 .scroller-content {
-    position: absolute; /* Allows content to be moved programmatically */
-    width: 100%; /* Full width to align with the scroller */
+    position: absolute;
+    width: 100%;
 }
 
-.scroller-content > div {
-    position: relative;
-    width: 100%; /* Ensure each content block spans the full width of the scroller */
-    padding: 5px; /* Padding for content within blocks */
-    margin-bottom: 10px; /* Spacing between items in the scroller */
+@media (max-width: 768px) {
+    .custom-content-scroller {
+        height: 100px;
+    }
 }
 
-.scroller-content a {
-    text-decoration: none; /* No underline for links */
-    color: #333; /* Dark grey color for text links */
-    display: block; /* Block display to ensure full width links */
+.custom-content-scroller:hover .scroller-content {
+    animation-play-state: paused;
+   
 }

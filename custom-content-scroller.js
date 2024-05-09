@@ -1,39 +1,56 @@
 jQuery(document).ready(function($) {
     $('.custom-content-scroller').each(function() {
-        const $scroller = $(this);
-        const $scrollerContent = $scroller.find('.scroller-content');
-        const speed = parseInt($scroller.data('speed'), 10) || 1; // Default speed to 1 if undefined
+        var $scroller = $(this);
+        var speed = parseInt($scroller.data('speed'), 10) || 3000; 
 
-        // Clone the content to create a continuous effect
-        const $contentClone = $scrollerContent.clone();
-        $scrollerContent.append($contentClone.children());
+        var $content = $scroller.find('.scroller-content');
+        var originalContent = $content.html();
+        
+       
+        function adjustContent() {
+            var requiredHeight = $scroller.height() * 2; 
+            var contentHeight = $content.outerHeight(true); 
 
-        const scrollHeight = $scrollerContent.outerHeight() / 2; // Explanation for dividing by 2
-
-        let animationId;
-
-        // Continuous scrolling function using requestAnimationFrame
-        function scrollContent() {
-            const currentScrollTop = $scroller.scrollTop();
-            if (currentScrollTop >= scrollHeight) {
-                $scroller.scrollTop(1); // Reset to avoid visual jump
-            } else {
-                $scroller.scrollTop(currentScrollTop + 1);
+            
+            var timesToReplicate = Math.ceil(requiredHeight / contentHeight);
+            var newContent = '';
+            for (var i = 0; i < timesToReplicate; i++) {
+                newContent += originalContent;
             }
-            animationId = requestAnimationFrame(scrollContent);
+
+            $content.html(newContent);
         }
 
-        // Pause and resume on hover
+       
+        adjustContent();
+
+        function scrollContent() {
+            var totalHeight = $content.outerHeight(true) / 2;
+            var duration = totalHeight / $scroller.height() * speed;
+
+            $scroller.animate({ scrollTop: totalHeight }, duration, 'linear', function() {
+              
+                $scroller.scrollTop(0);
+                setTimeout(scrollContent, 10); 
+            });
+        }
+
+       
         $scroller.hover(
             function() {
-                cancelAnimationFrame(animationId);
+                $(this).stop(true, false); 
+                console.log('Animation paused on hover'); 
             },
             function() {
-                animationId = requestAnimationFrame(scrollContent);
+                console.log('Hover ended, resuming animation'); 
+                scrollContent(); 
             }
         );
 
-        // Starting the animation
-        animationId = requestAnimationFrame(scrollContent);
+       
+        $(window).resize(adjustContent);
+
+      
+        scrollContent();
     });
 });
