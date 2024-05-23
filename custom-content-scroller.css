@@ -1,4 +1,4 @@
- .custom-content-scroller {
+.custom-content-scroller {
     position: relative;
     overflow: hidden;
     height: 200px;
@@ -8,6 +8,13 @@
 .scroller-content {
     position: absolute;
     width: 100%;
+    top: 0;
+    animation: scrollVertical linear infinite;
+}
+
+@keyframes scrollVertical {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
 }
 
 @media (max-width: 768px) {
@@ -18,5 +25,9 @@
 
 .custom-content-scroller:hover .scroller-content {
     animation-play-state: paused;
-   
+}
+
+.scroller-item {
+    padding: 10px;
+    box-sizing: border-box;
 }

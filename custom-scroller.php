@@ -3,18 +3,17 @@
 Plugin Name: Vertical Content Scroller
 Description: Scroll custom content vertically with customizable speed for a dynamic user experience.
 Version: 1.0
-Author: PottersWheel Media
+Author: Potters Wheel Media
 */
 
 function custom_content_scroller_enqueue_scripts() {
-    if (!is_admin()) { 
+    if (!is_admin()) {
         wp_enqueue_style('custom-content-scroller-style', plugins_url('custom-content-scroller.css', __FILE__));
-        wp_enqueue_script('jquery'); 
+        wp_enqueue_script('jquery');
         wp_enqueue_script('custom-content-scroller-script', plugins_url('custom-content-scroller.js', __FILE__), array('jquery'), '1.0', true);
     }
 }
 add_action('wp_enqueue_scripts', 'custom_content_scroller_enqueue_scripts');
-
 
 function custom_content_scroller_add_admin_menu() {
     add_menu_page('Content Scroller Settings', 'Vertical Content Scroller', 'manage_options', 'content_scroller_settings', 'custom_content_scroller_settings_page');
@@ -34,7 +33,7 @@ function custom_content_scroller_settings_page() {
     ?>
     <div class="wrap">
         <h2>Vertical Content Scroller Settings</h2>
-        <h3>use ShortCode :- vertical_custom_content_scroller</h3>
+        <h3>Use ShortCode: [vertical_custom_content_scroller]</h3>
         <form method="post" action="options.php">
             <?php settings_fields('content_scroller_settings_group'); ?>
             <?php do_settings_sections('content_scroller_settings_group'); ?>
@@ -59,10 +58,11 @@ function custom_content_scroller_settings_page() {
     </div>
     <?php
 }
+
 function custom_content_scroller_shortcode($atts) {
-    $speed = get_option('content_scroller_speed', '3000'); // Default speed if not set
+    $speed = get_option('content_scroller_speed', '3000');
     if (!is_numeric($speed) || $speed <= 0) {
-        $speed = 3000; // Set a default fallback speed
+        $speed = 3000;
     }
     ob_start();
     ?>
@@ -72,11 +72,11 @@ function custom_content_scroller_shortcode($atts) {
                 $url = get_option("content_scroller_url_$i");
                 $content = get_option("content_scroller_content_$i");
                 if (!empty($content)): ?>
-                    <div>
+                    <div class='scroller-item'>
                         <?php if (!empty($url)): ?>
-                            <a href="<?php echo esc_url($url); ?>"><?php echo esc_html($content); ?></a>
+                            <a href="<?php echo esc_url($url); ?>"><?php echo wp_kses_post($content); ?></a>
                         <?php else: ?>
-                            <?php echo esc_html($content); ?>
+                            <?php echo wp_kses_post($content); ?>
                         <?php endif; ?>
                     </div>
                 <?php endif;
@@ -86,6 +86,5 @@ function custom_content_scroller_shortcode($atts) {
     <?php
     return ob_get_clean();
 }
-
-
 add_shortcode('vertical_custom_content_scroller', 'custom_content_scroller_shortcode');
+?>
